@@ -1,0 +1,46 @@
+domain	process	markers	interpretation_qa
+Carbon fixation	Rubisco / Calvin-Benson-Bassham	rbcL,rbcS,prk	Classify Rubisco forms; rbcL alone does not prove autotrophy
+Carbon fixation	Wood-Ljungdahl carbon fixation	acsB,cooS,fdh	Differentiate CODH homologs and physiology; require module coherence
+Methanotrophy	Methane monooxygenases	pmoA,pmoB,pmoC,mmoX	pmoA and amoA homolog confusion; targeted phylogeny
+Methanogenesis	Methyl-CoM reductase	mcrA,mcrB,mcrG	Distinguish methane cycling and divergent alkyl-CoM reductases
+Organic carbon	Polysaccharide degradation	GH,PL,CE,AA,CBM	dbCAN families, substrate predictions with support; no measured rates
+Organic carbon	Aromatic carbon degradation	catA,catB,pcaG,pcaH	Context-specific and orthogonal validation
+Nitrogen	Nitrogen fixation	nifH,nifD,nifK	nifH homolog specificity, operon coherence, phylogenetic validation
+Nitrogen	Ammonia oxidation	amoA,amoB,amoC	Differentiate bacterial/archaeal amo and pmo by phylogeny
+Nitrogen	Nitrite oxidation	nxrA,nxrB	Distinguish nitrate reductase narG homologs
+Nitrogen	Dissimilatory nitrate reduction	narG,narH,narI,napA,napB	Nar versus Nap and genomic context
+Nitrogen	Denitrification nitrite step	nirS,nirK	Individual marker not a complete denitrification pathway
+Nitrogen	Denitrification NO step	norB,norC,norZ	Alternative NOR types and homologs
+Nitrogen	Denitrification N2O step	nosZ,nosD,nosF	Include divergent nosZ clades
+Nitrogen	DNRA nitrite reduction	nrfA,nrfH	Check catalytic heme motif and neighboring genes
+Nitrogen	Assimilatory nitrogen	nasA,nirA,amtB,glnA,gltB	Uptake/assimilation is not denitrification
+Nitrogen	Urea utilization	ureA,ureB,ureC,urtABCDE	Urease gene completeness vs ammonium release
+Sulfur	Dissimilatory sulfate reduction	sat,aprA,aprB,dsrA,dsrB,dsrC	Classify reductive vs oxidative Dsr using gene trees and context
+Sulfur	Sulfur oxidation	soxA,soxX,soxY,soxZ,soxB,soxC,soxD	Different SOX architectures imply different capabilities
+Sulfur	Sulfide oxidation	sqr,fccA,fccB	Confirm proper substrate specificity
+Sulfur	Assimilatory sulfate reduction	cysC,cysD,cysN,cysH,cysI,cysJ	Do not conflate with dissimilatory sulfate reduction
+Sulfur	Organosulfur uptake/cleavage	tauD,ssuD,ssuA,ssuB	Transport/catabolism context; taurine evidence
+Sulfur	DMSP demethylation	dmdA,dmdB,dmdC,dmdD	dmdA specificity uncertain without ortholog validation
+Sulfur	DMSP cleavage	dddD,dddL,dddP,dddQ,dddW,dddY,dddK	Different enzyme families; validate motif/context
+Phosphorus	High-affinity phosphate uptake	pstS,pstC,pstA,pstB,phoU	Not equivalent to phosphorus limitation measurement
+Phosphorus	Pho regulation	phoB,phoR,phoD,phoA	Regulator presence not proof of activation
+Phosphorus	Phosphonate metabolism	phnC,phnD,phnE,phnG,phnH,phnI,phnJ	Check complete C-P lyase pathway
+Phosphorus	Polyphosphate metabolism	ppk,ppx	Storage potential not flux
+Osmotic	Ectoine synthesis	ectA,ectB,ectC,ectD	Biochemical pathway coherence
+Osmotic	Glycine betaine	betA,betB,proV,proW,proX,opuA	Separate synthesis from transport
+Osmotic	Ion homeostasis	nhaA,nhaB,kdpA,kdpB,kdpC,trkH	Transporter gene not directly salinity tolerance phenotype
+Iron	Ferrous uptake	feoA,feoB	Gene localization and taxonomy
+Iron	Ferric/siderophore uptake	tonB,exbB,exbD,fepA	TonB is generic transporter; require siderophore-specific cargo evidence
+Iron	Iron oxidation/reduction	cyc2,mtoA,mtrA,mtrB,mtrC	Highly context dependent, phylogenetic/biochemical validation
+Iron	Iron acquisition regulation	fur,irp,fhu	Avoid generic metal-transporter overcalls
+Stress	Oxidative stress	sodA,sodB,katG,katE,ahpC,ahpF	Encoded potential only
+Stress	Thioredoxin/peroxiredoxin	trxA,trxB,bcp,tpx	Oxidoreductases occur across diverse contexts
+Stress	DNA damage and repair	recA,uvrA,uvrB,uvrC	Presence not induction
+Motility	Flagellar structure	fliC,flgB,flgE,motA,motB	Require pathway, not single marker
+Motility	Chemotaxis	cheA,cheW,cheY,cheR,cheB	Check operon and taxonomy
+Biofilm	Pili and attachment	pilA,pilB,pilC,pilT	Pili are multifunctional
+Signaling	AHL quorum-sensing	luxI,luxR	luxS alone is not conclusive quorum-sensing evidence
+Nutrients	Organic/peptide transport	oppA,oppB,oppC,livF	Transporter family substrate specificity varies
+Nutrients	ABC transporters	abcA,abcB,opp,pst	ABC signature alone not nutrient specificity
+Viruses	Virus hallmark	terminase,major_capsid,portal	GeNomad/CheckV context, no species from one hallmark
+Eukaryotes	Eukaryote SSU	18S_rRNA,28S_rRNA	SILVA/PR2, phylogenetic placement, copy number bias

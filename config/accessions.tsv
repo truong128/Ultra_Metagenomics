@@ -1,0 +1,3 @@
+sample	ena_run	biosample	sample_alias	depth_m	collection_date	site	study	fastq_1	fastq_2
+Motosu_5m	ERR14787630	SAMEA117850005	Mot-5	5	2015-09-07	Lake Motosu	PRJEB35640	ftp.sra.ebi.ac.uk/vol1/fastq/ERR147/030/ERR14787630/ERR14787630_1.fastq.gz	ftp.sra.ebi.ac.uk/vol1/fastq/ERR147/030/ERR14787630/ERR14787630_2.fastq.gz
+Motosu_100m	ERR14787631	SAMEA117850006	Mot-100	100	2015-09-07	Lake Motosu	PRJEB35640	ftp.sra.ebi.ac.uk/vol1/fastq/ERR147/031/ERR14787631/ERR14787631_1.fastq.gz	ftp.sra.ebi.ac.uk/vol1/fastq/ERR147/031/ERR14787631/ERR14787631_2.fastq.gz

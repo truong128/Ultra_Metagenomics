@@ -1,0 +1,51 @@
+{
+  "project": "Ultra_Metagenomics",
+  "samples_tsv": "config/samples.tsv",
+  "results_dir": "results",
+  "threads": 8,
+  "profile": "docker",
+  "nfcore_mag_version": "5.5.0",
+  "assembler": "megahit",
+  "assembly_mode": "per_sample",
+  "binning_mode": "resource_aware",
+  "core_engine": "nfcore_mag",
+  "core_enable_gunc": false,
+  "core_enable_gtdbtk": false,
+  "core_enable_genomad": false,
+  "core_enable_metaeuk": false,
+  "reference_databases": {
+    "kraken2": "",
+    "bracken_read_length": 150,
+    "phyloflash_silva": "",
+    "eggnog_data": "",
+    "dbcan": "",
+    "genomad": "",
+    "checkv": "",
+    "gunc": "",
+    "gtdbtk": "",
+    "metaeuk": "",
+    "skani_representatives": ""
+  },
+  "mag_source_glob": "GenomeBinning/DASTool/bins/*.fa",
+  "viral_fasta": "",
+  "reference_notes": "Pin exact DB versions and SHA256 in config/db_manifest.tsv. No biological sample results are distributed.",
+  "core_benchmark_spades": false,
+  "resource_mode": "mac64",
+  "resources": {
+    "host_ram_gb": 64,
+    "docker_memory_gb": 48,
+    "max_process_memory_gb": 40,
+    "max_cpus": 8,
+    "nxf_java_heap_gb": 4,
+    "enable_semibin_on_mac": false
+  },
+  "ani": {
+    "min_ani_pct": 95,
+    "min_af_pct": 50,
+    "classification_mode": "candidates_only"
+  },
+  "mag_review_tsv": "config/approved_mags.tsv",
+  "metabolic_c_script": "",
+  "pipeline_version": "3.0",
+  "automatic_quality_gate": "CheckM2 >= 50 completeness and <= 10 contamination; auto threshold only, not manual curation"
+}

@@ -1,0 +1,99 @@
+ID	PHASE	STEP	OWNER	STATUS	EVIDENCE
+00	GLOBAL	Define a priori questions and hypotheses	Study protocol	DESIGN_PROTOCOL	Do not claim causality from DNA
+01	GLOBAL	Define sampling compartments and filtration pore size	Field SOP	DESIGN_PROTOCOL	Batch, size-fraction, filtration volume
+02	GLOBAL	Design biological replication across site, tide, depth, season	Study protocol	DESIGN_PROTOCOL	Independent units
+03	GLOBAL	Field blanks, filtration blanks, extraction blanks and library blanks	Field/lab SOP	DESIGN_PROTOCOL	Control labels in metadata
+04	GLOBAL	Positive/mock standards and quantitative spike-ins if used	Field/lab SOP	DESIGN_PROTOCOL	Absolute abundance requires calibration
+05	GLOBAL	Record salinity, pH, DO, turbidity, temp, tide, coordinates	Metadata/MiXS	DESIGN_PROTOCOL	Measured values only
+06	GLOBAL	Collect nutrient/redox/organic carbon/metal environmental chemistry	Field chemistry	DESIGN_PROTOCOL	Biogeochemical activity proxy
+07	GLOBAL	Sample preservation and chain-of-custody	Field SOP	DESIGN_PROTOCOL	Freezer/stabilizer log
+08	GLOBAL	DNA extraction/inhibition/Qubit/Tapestation controls	Lab SOP	DESIGN_PROTOCOL	Wet-lab QC
+09	GLOBAL	Library prep/platform/insert/negative extraction audit	Lab SOP	DESIGN_PROTOCOL	Library batch
+10	GLOBAL	Raw FASTQ + checksums + lane/read-group manifest	File intake	VALIDATED_LOCAL	Input audit
+11	GLOBAL	Sample sheet and FASTQ pair integrity	validate_inputs.py	EXECUTABLE_LOCAL	Read names, lengths, file integrity
+12	GLOBAL	Raw FASTQ QC	nf-core/mag FastQC	CORE_NFCORE	FastQC output
+13	GLOBAL	Paired adapter/quality trimming	nf-core/mag fastp	CORE_NFCORE	Clean reads preserved
+14	GLOBAL	PhiX screen and known library artifacts	nf-core/mag	CORE_NFCORE	Retained/removed denominator
+15	GLOBAL	Human/host selective removal only with justification	nf-core/mag optional host	OPTIONAL_CORE	Do not deplete all eukaryotes
+16	GLOBAL	Quantify contamination against blanks	Control-aware model	CURATED_DOWNSTREAM	Needs blanks
+17	GLOBAL	Sequence coverage/saturation	Nonpareil	POST_EXECUTABLE	Independent sampling depth
+18	GLOBAL	Read-level broad taxonomic profile	Kraken2	POST_EXECUTABLE	Reference DB biases explicit
+19	GLOBAL	Correct read-level abundance	Bracken	OPTIONAL_EXTENSION	Read length-specific calibration
+20	GLOBAL	Protein-level read taxonomy	Kaiju via nf-core/taxprofiler	POST_EXECUTABLE	Orthogonal distant taxa
+21	GLOBAL	SSU/16S/18S discovery	phyloFlash	POST_EXECUTABLE	SILVA database
+22	GLOBAL	SSU eukaryotic placement and lineage confirmation	PR2 + curated tree	CURATED_DOWNSTREAM	Copepods not to species from one SSU
+23	GLOBAL	Choose per-sample or group coassembly	Study-aware policy	CORE_NFCORE	Configured per-sample
+24	GLOBAL	Primary short-read assembly	MEGAHIT	CORE_NFCORE	One production assembler
+25	GLOBAL	Alternative short-read assembly benchmark	metaSPAdes	BENCHMARK_ONLY	No double routine assembly
+26	GLOBAL	Optional nanopore/PacBio/hybrid assembly	Flye/metaMDBG/SPAdes hybrid	OPTIONAL_CORE	Only with long reads
+27	GLOBAL	Assembly N50/size/completeness	QUAST	CORE_NFCORE	Assembly metrics
+28	GLOBAL	Assembly likelihood/misassembly warnings	ALE + read mapping	CORE_NFCORE	QC against reads
+29	GLOBAL	Read recruitment and proper pairing	Bowtie2	CORE_NFCORE	Read mapping rates
+30	GLOBAL	Contig depth/breadth and co-abundance profiles	Samtools/metabat depth	CORE_NFCORE	Breadth requires separate QC
+31	GLOBAL	Bacterial/archaeal ORF prediction	Prodigal	CORE_NFCORE	Non-eukaryotic ORFs
+32	GLOBAL	Eukaryotic ORF prediction	MetaEuk	OPTIONAL_CORE	Requires DB
+33	GLOBAL	rRNA and tRNA annotation	barrnap/tRNAscan	CORE_AND_OPTIONAL	Quality/standards
+34	GLOBAL	Protein nonredundant catalogue	MMseqs2	POST_EXECUTABLE	Keep cluster membership
+35	GLOBAL	Unassembled read-gene rescue and unmapped fraction	DIAMOND / marker approach	CURATED_DOWNSTREAM	Assembly bias sensitivity
+36	GLOBAL	Community-wide ortholog annotation	eggNOG-mapper	POST_EXECUTABLE	Use core proteins; no Prodigal repeat
+37	GLOBAL	KOfam KO diagnostic markers	KOfamScan	POST_EXECUTABLE	Independent HMM thresholds
+38	GLOBAL	Pfam/InterPro protein architecture	InterProScan/Pfam	OPTIONAL_EXTENSION	Avoid generic fold overclaim
+39	GLOBAL	Carbohydrate active enzymes	dbCAN CAZyme	POST_EXECUTABLE	Family-level evidence
+40	GLOBAL	CAZyme gene clusters and substrate inference	dbCAN CGC	OPTIONAL_EXTENSION	Requires context/GFF
+41	GLOBAL	Protein transporters and nutrient uptake	Transporter annotations	CURATED_DOWNSTREAM	Do not assume substrates
+42	GLOBAL	MAG binning	MetaBAT2+MaxBin2+SemiBin2+CONCOCT+COMEBin+MetaBinner	CORE_NFCORE	linux64 runs the full ensemble; COMEBin/MetaBinner may be skipped if they exceed 64 GB
+43	GLOBAL	MAG ensemble refinement	DAS Tool	CORE_NFCORE	Refined candidates
+44	GLOBAL	MAG completeness and contamination	CheckM2/BUSCO	CORE_NFCORE	Genome-specific standards
+45	GLOBAL	MAG chimerism	GUNC	OPTIONAL_CORE	May require DB
+46	GLOBAL	MAG taxonomy	GTDB-Tk	OPTIONAL_CORE	Only bacteria/archaea
+47	GLOBAL	MAG de-replication / strain diversity	dRep	POST_EXECUTABLE	Needs at least two QC-threshold MAGs; InStrain remains separate
+48	GLOBAL	Genome-level metabolism	DRAM2	POST_EXECUTABLE	Single genome functions
+49	GLOBAL	Community C/N/S metabolism	METABOLIC-C	CURATED_DOWNSTREAM	Read-based weight required
+50	GLOBAL	Pathway completeness and diagnostic genes	Curated HMM/KO rules	CURATED_DOWNSTREAM	Completeness vs presence
+51	GLOBAL	Carbon fixation/methane cycling	Marker + gene-tree review	CURATED_DOWNSTREAM	amoA/pmoA disambiguation
+52	GLOBAL	Carbon polymers/CAZyme substrate analysis	dbCAN + context	POST_AND_CURATED	No activity inferred
+53	GLOBAL	Nitrogen pathways: nitrification, N fixation, DNRA, denit	Marker + phylogeny	CURATED_DOWNSTREAM	Direction and subpathways
+54	GLOBAL	Sulfur pathways: assimilatory/dissimilatory, DMSP	Marker + phylogeny	CURATED_DOWNSTREAM	Separate genes and reactions
+55	GLOBAL	Phosphate and phosphonate metabolism	Pst/Pho/Phn marker review	CURATED_DOWNSTREAM	Uptake vs substrate hydrolysis
+56	GLOBAL	Salinity/osmoprotectant genes	ect/bet/kdp/nha panel	CURATED_DOWNSTREAM	Check gene context
+57	GLOBAL	Iron uptake versus iron oxidation/reduction	FeGenie	POST_EXECUTABLE	Siderophores ≠ iron respiration
+58	GLOBAL	Oxidative and metal stress genes	Curated pathway review	CURATED_DOWNSTREAM	No direct stress measurement
+59	GLOBAL	Motility/chemotaxis/quorum/biofilm potential	Curated pathway review	CURATED_DOWNSTREAM	Presence not behavior
+60	GLOBAL	Euk domain-level classification of contigs	Tiara	POST_EXECUTABLE	Domain only
+61	GLOBAL	Eukaryotic 18S/organelles/protist taxonomy	PR2 + organelle-specific references	CURATED_DOWNSTREAM	Treat mislabelled organelles
+62	GLOBAL	Eukaryotic MAG QC and orthology	EukCC/BUSCO/MetaEuk	POST_EXECUTABLE	EukCC runs only on bins already called eukaryotic
+63	GLOBAL	Virus/plasmid detection	geNomad	OPTIONAL_CORE	Do not count as species
+64	GLOBAL	Viral genome quality and provirus structure	CheckV	POST_EXECUTABLE	Requires viral FASTA
+65	GLOBAL	Viral host linkage / phage lifestyle	iPHoP/CRISPR/prophage	CURATED_DOWNSTREAM	Probabilistic
+66	GLOBAL	vOTUs/virome abundance	CheckV/vContact2 alternatives	OPTIONAL_EXTENSION	Appropriate clustering criteria
+67	GLOBAL	AMR genomic potential	AMRFinderPlus	POST_EXECUTABLE	No clinical resistance without testing
+68	GLOBAL	Virulence protein screening	VFDB/curated thresholds	CURATED_DOWNSTREAM	Environmental risk requires caution
+69	GLOBAL	Biosynthetic gene clusters	antiSMASH	POST_EXECUTABLE	MAG assembly completeness affects BGCs
+70	GLOBAL	CRISPR spacer host links	minced	POST_EXECUTABLE	Spacer match is not by itself a host assignment
+71	GLOBAL	Metagenomic functional abundance normalization	Coverage and gene length	CURATED_DOWNSTREAM	No species from contig counts
+72	GLOBAL	Multi-sample alpha/beta diversity	Phyloseq/vegan	OPTIONAL_EXTENSION	Requires independent samples
+73	GLOBAL	Differential abundance/compositional modelling	ANCOM-BC2/ALDEx2	OPTIONAL_EXTENSION	Controls/batch/permutations
+74	GLOBAL	Environmental gradients and covariate modelling	PERMANOVA/dbRDA	OPTIONAL_EXTENSION	Enough replicates
+75	GLOBAL	Ecological interaction hypotheses	SPIEC-EASI/SparCC + validation	CURATED_DOWNSTREAM	Correlation is not interaction
+76	GLOBAL	RNA/protein/enzyme/metabolite orthogonal validation	Multiomics/wet lab	EXPERIMENTAL	Function potential ≠ activity
+77	GLOBAL	Phylogenetic placement of diagnostic marker families	MAFFT/IQ-TREE/placement	CURATED_DOWNSTREAM	Essential for paralogs
+78	GLOBAL	Functional claim evidence register	Manual evidence audit	CURATED_DOWNSTREAM	Store gene ids, MAGs, QC
+79	GLOBAL	Figure generation and uncertainty annotation	R/python templates	OPTIONAL_EXTENSION	No invented figures
+80	GLOBAL	Data deposition and FAIR metadata	ENA/SRA/Zenodo	PUBLICATION_GATE	Sensitive location policy
+81	GLOBAL	MIxS, MIMAG/MISAG/MIUViG and reporting	Standards checklists	PUBLICATION_GATE	Release/version provenance
+82	GLOBAL	Reproducibility, licences, hash/CI, frozen containers	Project audit	EXECUTABLE_LOCAL	Versioned environment and data
+83	MAC64	Mac platform/ARM container compatibility preflight	Docker/Nextflow doctor	EXECUTABLE_LOCAL	Needs test run for binary compatibility
+84	MAC64	Hard resource request caps and OOM escalation	profiles/mac64.config	EXECUTABLE_LOCAL	Caps are not guaranteed peak resident memory
+85	MAG_TAXONOMY	Review MAG completeness, contamination, chimerism	MAG review TSV; CheckM2/GUNC	EXECUTABLE_LOCAL	Explicit reviewer approval needed
+86	MAG_TAXONOMY	Index versioned GTDB representatives for ANI	skani sketch	POST_EXECUTABLE	Separate standalone sketch database; versioned refs
+87	MAG_TAXONOMY	Low-memory genome ANI+bidirectional alignment fractions	skani search	POST_EXECUTABLE	Candidate hits not official GTDB species
+88	MAG_TAXONOMY	Flag unresolved and low coverage MAGs without overassigning species	ANI candidate report	EXECUTABLE_LOCAL	Unassigned != new species
+89	MAG_TAXONOMY	Explicit optional HPC GTDB-Tk pplacer classification	GTDB-Tk classify_wf	POST_EXECUTABLE	Separate linux64 stage with 1 pplacer CPU and disk scratch; still blocked on mac64 and when RAM+swap is below 96 GB
+90	GLOBAL	Confirm total RAM, reference release and ARM runtime in manuscript	Provenance and manual review	CURATED_DOWNSTREAM	Reference DB release and precise classification rule
+91	GLOBAL	Multi-tool read taxonomy beyond Kraken2	nf-core/taxprofiler	POST_EXECUTABLE	Kaiju, MetaPhlAn, DIAMOND; do not treat as the same denominator as cleaned reads
+92	GLOBAL	Gene-structure contig domain classification	Whokaryote model S	POST_EXECUTABLE	Does not re-run Tiara; complements the Tiara stage
+93	GLOBAL	Read-level pathway abundance	HUMAnN	POST_EXECUTABLE	Encoded potential only; default nucleotide references are human-microbiome biased
+94	GLOBAL	Biogeochemical marker HMM screen	HMMER + curated HMM file	POST_EXECUTABLE	A hit is not a complete or active pathway
+95	GLOBAL	SqueezeMeta whole-engine benchmark	SqueezeMeta	BENCHMARK_ONLY	Held unless listed in benchmark_engines; never merged with nf-core contigs
+96	GLOBAL	metagenome-atlas whole-engine benchmark	atlas	BENCHMARK_ONLY	Held unless listed in benchmark_engines; never merged with nf-core contigs
+97	GLOBAL	Viral host prediction	iPHoP	POST_EXECUTABLE	Probabilistic host link, not a demonstrated infection

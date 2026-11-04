@@ -1,0 +1,3 @@
+sample	group	r1	r2	kind	season	site	salinity_psu	tide	collection_date	is_negative_control
+Motosu_5m	Motosu	data/ERP118719/ERR14787630_1.fastq.gz	data/ERP118719/ERR14787630_2.fastq.gz	water	autumn	Motosu	NA	NA	2015-09-07	false
+Motosu_100m	Motosu	data/ERP118719/ERR14787631_1.fastq.gz	data/ERP118719/ERR14787631_2.fastq.gz	water	autumn	Motosu	NA	NA	2015-09-07	false
