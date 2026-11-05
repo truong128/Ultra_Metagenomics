@@ -229,3 +229,7 @@ docs/DATABASE_SETUP.md          where each database path is documented
 ```
 
 `config/project.json` is gitignored after you copy and fill it, so local paths are not pushed.
+
+## Citation
+
+Truong Nguyen, CUNY School of Medicine.

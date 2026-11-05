@@ -72,3 +72,7 @@ python3 -m unittest discover -s tests -v
 ```
 
 **Tài liệu kỹ thuật gốc:** https://nf-co.re/mag/5.5.0/ ; https://github.com/bluenote-1577/skani ; https://github.com/BortonWrightonLabs/DRAM ; https://github.com/AnantharamanLab/METABOLIC ; https://run-dbcan.readthedocs.io/
+
+## Citation
+
+Truong Nguyen, CUNY School of Medicine.

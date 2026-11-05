@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: Ultra_Metagenomics
+authors:
+  - given-names: Truong
+    family-names: Nguyen
+    affiliation: CUNY School of Medicine
