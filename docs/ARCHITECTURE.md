@@ -1,10 +1,10 @@
-# MangroveMetaX Ultra v2.1 Mac64 - advanced design and tool de-duplication
+# Architecture
 
-## Architecture: what is genuinely unified
+## Production assembly
 
-One primary production engine: **nf-core/mag v5.5.0**, Nextflow/Docker, per-sample Illumina PE assembly by default. The pipeline itself performs initial QC, fastp, PhiX removal, MEGAHIT assembly, QUAST/ALE, read mapping, gene prediction, binning, bin QC, and optionally GTDB-Tk, GUNC, Tiara, geNomad and MetaEuk. **Never run SqueezeMeta immediately after this in production**. SqueezeMeta is an alternative engine for whole-pipeline benchmarks, not an extra feature to run on the same data and report alongside the core.
+One production engine: **nf-core/mag v5.5.0**, Nextflow/Docker, per-sample Illumina paired-end assembly. The core performs QC, fastp, PhiX removal, MEGAHIT assembly, QUAST, read mapping, gene prediction, binning, bin QC, and optionally GUNC, Tiara, geNomad and MetaEuk. Production contigs are the MEGAHIT contigs. Downstream stages use those contigs and the Prodigal proteins from the same run.
 
-We add domain-specific evidence after the core, using the **same canonical contigs and Prodigal proteins** to prevent duplicate assembly/gene calling. Strict `assets.json` bridging provides explicit sample identifiers, assembly FASTA, protein FASTA, Prodigal GFF and DAS-refined candidate MAG FASTAs. Its source paths correspond to the official output specification for nf-core/mag 5.5.0: `Assembly/MEGAHIT/<sample>.contigs.fa.gz`, `Annotation/Prodigal/MEGAHIT-<sample>.faa.gz` and `.gff.gz`. It does not guess filenames from unknown source structures. It rejects missing files. It refuses coassembly where the one-to-one sample bridge would be inaccurate. When DAS Tool yields no bins, the manifest warns but does not misreport zero MAGs.
+Domain-specific evidence is added after the core, using the **same contigs and Prodigal proteins**, so the reads are not assembled or called a second time. Strict `assets.json` bridging provides explicit sample identifiers, assembly FASTA, protein FASTA, Prodigal GFF and DAS-refined candidate MAG FASTAs. Its source paths correspond to the official output specification for nf-core/mag 5.5.0: `Assembly/MEGAHIT/<sample>.contigs.fa.gz`, `Annotation/Prodigal/MEGAHIT-<sample>.faa.gz` and `.gff.gz`. It does not guess filenames from unknown source structures. It rejects missing files. It refuses coassembly where the one-to-one sample bridge would be inaccurate. When DAS Tool yields no bins, the manifest warns but does not misreport zero MAGs.
 
 **Production execution graph:**
 
@@ -40,8 +40,8 @@ validate_inputs -> nf-core/mag 5.5.0 [FastQC, fastp, PhiX, MEGAHIT, QUAST, ALE, 
 | Function | Default | Alternative | Decision |
 |---|---|---|---|
 | Quality + trimming | nf-core/mag fastp + FastQC | standalone fastp | Standalone QC is NOT run in production |
-| Assembly | nf-core/mag MEGAHIT | metaSPAdes / SqueezeMeta assembler | Other assemblers only benchmark or highly selected samples |
-| Gene calls | nf-core/mag Prodigal | SqueezeMeta Prodigal | Reuse core proteins, no repeated ORF prediction |
+| Assembly | nf-core/mag MEGAHIT | a second assembler | Production tables use the MEGAHIT contigs |
+| Gene calls | nf-core/mag Prodigal | a second gene caller | Reuse the core proteins |
 | Read mapping | nf-core/mag Bowtie2 | custom mapper | No repeated mapping unless extra scientific question |
 | Binning | MetaBAT2 + MaxBin2 (Mac64); optional SemiBin2 research/HPC | others | Different algorithms genuinely add genome recovery; DAS Tool outputs curated bins |
 | MAG QC | CheckM2 + optional GUNC | CheckM1 | No routine CheckM1/2 duplicates |

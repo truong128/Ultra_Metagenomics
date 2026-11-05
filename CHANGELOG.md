@@ -1,25 +1,23 @@
-# MangroveMetaX Ultra changelog
+# Changelog
 
-## v3.1 Linux workstation (2026-11-02)
+## 2026-11-05
 
-- Default `resource_mode` is `linux64`: 24 CPUs, 48 GB per container, one heavy task at a time, NVIDIA runtime visible to containers.
-- Full binning ensemble (MetaBAT2, MaxBin2, SemiBin2, CONCOCT, COMEBin, MetaBinner) plus BUSCO. COMEBin and MetaBinner may fail without discarding the other binners.
-- geNomad, MetaEuk, GUNC and CAT attach only when their database path exists, so assembly is not blocked by a missing optional database.
-- GTDB-Tk pplacer is a separate `taxonomy_gtdb` stage (1 pplacer CPU, disk scratch, no full tree). It stays off until RAM+swap is at least 96 GB.
-- Added non-overlapping stages for taxprofiler, Whokaryote, Nonpareil, KOfamScan, MMseqs2, CoverM, dRep, EukCC, iPHoP, minced, HUMAnN and a biogeochemical HMM screen.
-- SqueezeMeta and metagenome-atlas are held benchmark engines. The AAFC host-associated workflow is not run, and host depletion is not imported.
-- Mac64 behavior is unchanged and now lives in `config/project_mac64.json`.
+- Public documentation describes the production workflow. MEGAHIT, through nf-core/mag 5.5.0, is the production assembler.
+- HUMAnN 3.9 uses MetaPhlAn 4.1.1 and the June 2023 markers. The January 2026 MetaPhlAn database stays with read-level taxonomy.
 
-## v3.0 AutoRun (2026-11-01)
+## 2026-11-02
 
-- Added `metax.py run-all` with topological ordering, resume, `--dry-run`, `--force`, strict completion semantics, opt-in `--allow-partial`.
-- Added KO annotation-count summary, measured-FASTA SVGs, per-stage stdout/stderr logs and status.json, report.json, report.html with explicit data/tool/DB blockers and incomplete research steps.
-- Added automatic conservative MAG candidate QC from nf-core/mag CheckM2 summary (exact IDs, hard stop on mismatch, no false official taxonomy).
-- Automated Bracken from Kraken2 reports, adapted CheckV to multiple viral FASTAs and decompression of METABOLIC-C input FASTQ.
-- Preserved Mac64 guard rails, explicit high-memory GTDB-Tk HPC workflow, scientific boundary warnings.
-- All previous research steps retained in the 91-step registry; some remain non-computational/manual rather than falsely reported as automated.
-- Local unit tests added to check automated QC, fail-closed behavior, scheduler preflight and truthful incomplete reports.
+- Default `resource_mode` is `linux64`: 24 CPUs, 48 GB per container, one heavy task at a time.
+- Binning uses MetaBAT2, MaxBin2, SemiBin2, CONCOCT, COMEBin, and MetaBinner, then DAS Tool, CheckM2, and BUSCO. COMEBin and MetaBinner may fail without discarding the other bins.
+- geNomad, MetaEuk, and GUNC run when their database path is set.
+- GTDB-Tk is a separate `taxonomy_gtdb` stage, outside the 48 GB Nextflow cap, with one pplacer CPU and no full tree. It starts when RAM plus swap is at least 150 GB.
+- Additional stages cover a second taxonomy, eukaryotic contigs, pathway abundance, virus-host prediction, and marker screens. Each stage uses the MEGAHIT contigs or the original reads. None of them assembles the reads again.
+- The Mac profile is unchanged and lives in `config/project_mac64.json`.
 
-## v2.1
+## 2026-11-01
 
-Mac64 mode and skani ANI candidate screening; v2.1 README replaced by v3.0 instructions.
+- Added `metax.py run-all` with resume, `--dry-run`, `--force`, and an opt-in `--allow-partial`.
+- Added an execution report, per-stage logs, a KO count summary, and FASTA summary figures.
+- MAG screening uses the CheckM2 summary at 50% completeness and 10% contamination. A failed match stops the gate. The gate does not assign a species name.
+- Bracken runs from the Kraken2 report. CheckV accepts the viral FASTA from geNomad.
+- Steps that are not computed from FASTQ stay in `docs/STEP_REGISTRY.tsv` and are not reported as finished.

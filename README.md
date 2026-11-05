@@ -150,7 +150,7 @@ Everything in the research track, plus the stages below. Each one answers an ext
 | Stage | Extra question | Disk |
 | --- | --- | --- |
 | `markers_hmm` | A short HMM screen for carbon, nitrogen, and sulfur marker genes. Useful in water. Redundant once KOfam or eggNOG already covers those pathways. | Small HMM file. |
-| `dram2` | A second metabolic summary of the bins (KOfam, dbCAN, MEROPS, VOG, FeGenie HMMs, CAMPER, UniRef). KEGG is not included. The Nextflow run needs Java 17 through 26. On Ubuntu the stage uses OpenJDK 21 when that binary is installed. | About 102 GB, of which UniRef90 is 96 GB. |
+| `dram2` | A second metabolic summary of the bins (KOfam, dbCAN, MEROPS, VOG, FeGenie HMMs, CAMPER, UniRef). KEGG is not included. The Nextflow run needs Java 17 through 26. | About 102 GB, of which UniRef90 is 96 GB. |
 | `fegenie` | Iron genes. Reasonable for a deep, stratified lake if iron is a hypothesis. | Tool data only. |
 | `metabolic_c` | Community metabolism with METABOLIC-C. | Small, but it unpacks reads and uses a lot of scratch. |
 | `antismash` | Biosynthetic gene clusters on the bins. | antiSMASH databases, separate from the table above. |
@@ -159,49 +159,28 @@ Everything in the research track, plus the stages below. Each one answers an ext
 | `catalogue` | A non-redundant protein catalogue of the predicted genes. | Scratch for MMseqs. |
 | `nonpareil` | How redundant the read set is, and a rough sequencing-effort curve. | Tool only. |
 
-**Held on purpose.**
-
-`benchmark_squeezemeta` and `benchmark_atlas` stay off (`benchmark_engines` is empty). They are other assemblers. Their contigs are not merged into the MEGAHIT tables. Add an engine name to `benchmark_engines` only for a side-by-side benchmark under `results/extensions/`.
-
 ## Hardware
 
-Figures below were measured on the Ubuntu workstation that ran these two Motosu libraries, with `du -sh` and `docker system df`.
+**Ubuntu, research track.** 64 GB RAM is enough for QC, MEGAHIT, mapping, MetaBAT2, MaxBin2, CONCOCT, DAS Tool, CheckM2, Kraken 16 GB, Bracken, phyloFlash, KOfam or eggNOG, dbCAN, and CoverM. Keep at least 1 TB free. With KOfam, SILVA, dbCAN, CheckV, and the 16 GB Kraken index, the research databases are under 120 GB. Assembly and mapping need on the order of 100 GB of scratch for libraries of this size. For two libraries like the worked example, a full run can use about 300 GB for Nextflow work and published results.
 
-| Item | Size |
-| --- | --- |
-| Reference databases, full set actually stored | 1.2 TB |
-| Nextflow `work/` | 143 GB |
-| Published `results/` | 167 GB |
-| Compressed FASTQ | 4.3 GB |
-| Conda environments used by the workflow | 36 GB |
-| Docker images on that host after the run | 80 GB |
-| Extra swap file reserved on disk | 384 GB |
-| System swap, separate from that file | 8 GB |
+**Ubuntu, full track.** 64 GB RAM is the minimum: a 48 GB ceiling on each Nextflow container, and one heavy container at a time. GTDB-Tk does not fit in 64 GB. Provide 128 GB RAM, or 64 GB RAM plus a swap file of at least 128 GB. The profile starts that stage only when RAM plus swap is at least 150 GB. Swap is slower than RAM. The uncapped Kraken index is memory-mapped, so it does not need 270 GB of RAM. Run it after the other stages. Keep 4 TB free before installing the full database set.
 
-The listed items occupy about 2.0 TB. The 384 GB swap file is reserved disk. At the time of the measurement, 15 GB of it held swapped pages and the 8 GB system swap was nearly full. The database total includes archives that can be deleted after a successful extract: a 57 GB GTDB tarball beside a 94 GB extracted release, and a 200 GB Kraken archive that had not been extracted yet.
-
-Largest database directories in that 1.2 TB:
-
-| Directory | Size | Track |
+| Database | Size | Track |
 | --- | --- | --- |
 | iPHoP | 294 GB | Full |
-| Kraken folder | 226 GB | 16 GB of this is the research index; 200 GB is the full archive |
-| GTDB | 151 GB | 94 GB extracted release, for species calls |
+| Kraken, full index | 270 GB extracted | Full. Keep the 16 GB index either way. |
+| GTDB release 232 | 94 GB | Full, for species calls |
 | Kaiju | 111 GB | Full |
 | DRAM2 | 102 GB | Full |
 | MetaPhlAn | 85 GB | Full |
-| HUMAnN | 50 GB | Full |
-| eggNOG | 48 GB | Research, if KOfam is not used |
+| HUMAnN | 50 GB | Full, plus about 25 GB for the June 2023 markers |
+| eggNOG | 48 GB | Research, when KOfam is not used |
 | EukCC | 18 GB | Full |
 | SILVA / phyloFlash | 16 GB | Research |
 | Kraken PlusPFP-16 | 16 GB | Research |
-| CheckV | 11 GB | Research, if viruses are included |
+| CheckV | 11 GB | Research, when viruses are included |
 | KOfam | 9 GB | Research |
 | dbCAN | 8 GB | Research |
-
-**Ubuntu, research track.** 64 GB RAM is enough for QC, MEGAHIT, mapping, MetaBAT2, MaxBin2, CONCOCT, DAS Tool, CheckM2, Kraken 16 GB, Bracken, phyloFlash, KOfam or eggNOG, dbCAN, and CoverM. Plan on at least 1 TB free: the research databases are under 120 GB with KOfam, SILVA, dbCAN, CheckV, and the 16 GB Kraken index, while the two-sample full run used 310 GB of `work/` plus `results/`. A research run that skips COMEBin, MetaEuk, and BUSCO will be smaller than that 310 GB. Assembly and mapping still need on the order of 100 GB of scratch for libraries of this size.
-
-**Ubuntu, full track.** 64 GB RAM is the minimum the linux profile was written for, with a 48 GB ceiling on each Nextflow container and one heavy container at a time. GTDB-Tk is the stage that does not fit in 64 GB. Give it 128 GB RAM, or 64 GB RAM plus a swap file of at least 128 GB (the profile looks for 150 GB of RAM plus swap). The Motosu run used a 384 GB swap file so pplacer could spill. Swap works and is slow. The uncapped Kraken index is memory-mapped. It does not need 270 GB of RAM, and it should run only after the other stages, because it will compete for disk. Plan on 4 TB free before starting the full database set, so databases (1.2 TB in the layout above), work, results, Docker images, and the swap file do not fill the disk.
 
 **MacBook Pro.** Use `resource_mode=mac64`. The profile caps the run at 8 threads and 40 GB per process, skips GTDB-Tk, skips SemiBin unless `enable_semibin_on_mac` is set, and skips metaSPAdes. The shipped Mac config also leaves geNomad, MetaEuk, GUNC, and BUSCO off. A MacBook Pro with 64 GB of unified memory can run the research stages that stay inside 40 GB: QC, MEGAHIT, MetaBAT2, MaxBin2, DAS Tool, CheckM2, Kraken 16 GB, Bracken, phyloFlash, KOfam or eggNOG, dbCAN, CoverM, dRep, and Nonpareil. Do not plan GTDB-Tk, the 270 GB Kraken index, iPHoP, DRAM2 with UniRef90, or COMEBin on a laptop. Apple silicon may be running Linux amd64 containers through Rosetta, which is slower. Put databases and `work/` on an external SSD. Keep at least 1 TB free for the research track. A 16 GB or 32 GB MacBook is outside this profile.
 

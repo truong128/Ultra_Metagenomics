@@ -33,7 +33,7 @@ Python 3.10+, Nextflow, Docker Desktop/Linux Docker, JDK phù hợp với bản 
 - DAG này chạy tất cả các adapter tin sinh học được liệt kê, không phải toàn bộ 91 bước nghiên cứu. Các bước nghiên cứu ngoài đời (sample collection, environmental measurements, bench validation, statistics requiring replicates) không thể hoàn thành chỉ bằng FASTQ.
 - Protein function ≠ enzyme activity. Co-occurrence ≠ metabolic exchange. MAG ≠ species count. Contig ≠ organism.
 - Với một mẫu độc lập, không chạy các kiểm định differential abundance, environmental association và network inference như thể có replicates.
-- Source tool versions và database release phải pin/kiểm tra riêng trước khi tuyên bố production validated. ZIP chỉ có unit tests với fixtures nhỏ, chưa có biological integration benchmark.
+- Ghi nhận phiên bản công cụ và bản database trước khi coi một lần chạy là đã kiểm định. Bộ unit test dùng fixture nhỏ và không thay cho một lần chạy trên reads thật.
 - Nếu `run-all` kết thúc không thành công, `report.html`/`report.json` vẫn ghi được kết quả nào đã chạy và tại sao các nhánh còn lại không được thực hiện.
 
 ## Đọc kết quả

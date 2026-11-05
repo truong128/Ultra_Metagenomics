@@ -22,7 +22,7 @@ COMEBin and MetaBinner are allowed to fail without discarding the other binners.
 
 GTDB-Tk pplacer is a separate stage, `taxonomy_gtdb`. It uses one pplacer CPU and a disk scratch directory. It does not use `--full_tree`. It does not run inside the 48 GB Nextflow cap, because that cap stops pplacer. Bacterial classification wants on the order of 100–150 GB of RAM plus swap. The linux profile blocks the stage until that total is available (`gtdbtk_min_ram_plus_swap_gb`, default 150).
 
-On a 64 GB machine, add a swap file of at least 128 GB. A 384 GB file is what was used for the Lake Motosu run described in `README.md`. pplacer then runs from swap and is slow. The stage still needs `reference_databases.gtdbtk` and `gtdbtk` on `PATH`.
+On a 64 GB machine, add a swap file of at least 128 GB before GTDB-Tk. pplacer then uses swap and is slower than the same step on RAM. The stage still needs `reference_databases.gtdbtk` and `gtdbtk` on `PATH`.
 
 ```bash
 sudo fallocate -l 128G /swap-metagenomics.img

@@ -1,4 +1,4 @@
-# MangroveMetaX Ultra v2.1 - MacBook Pro 64 GB RAM
+# MacBook Pro, 64 GB RAM
 
 ## A. Muc tieu / Purpose
 
@@ -11,14 +11,14 @@ This guide configures a resource-aware Mac mode without deleting any scientific 
 1. macOS recent enough for Nextflow + Java + Docker; host disk on APFS/SSD recommended. Working directory should not be mounted on an exFAT drive if Linux container permission/symlink semantics cause issues.
 2. Install Java supported by the pinned Nextflow release, Nextflow, Docker Desktop (or suitable runtime), Python 3.10+.
 3. Docker Desktop: Settings > Resources > Memory: **48 GB** (target; reserve ~16 GB for macOS and other work). Set CPU near 8, depending on your physical core count. Close other memory-intensive apps.
-4. Apple Silicon (M-series): be aware some `linux/amd64` bioinformatics images have no native `arm64` counterpart; Rosetta or QEMU emulation may be necessary. Check each image in an nf-core/mag test profile *before* production. This ZIP does not modify your system's Docker emulation settings.
-5. Edit `config/samples.tsv` to actual absolute FASTQ paths and `config/project.json` to appropriate database folders. The default `resource_mode` is `mac64`, with `threads=8`, `--max_cpus 8`, `--max_memory 40.GB`, and `profiles/mac64.config` to cap resource requests. SemiBin2 is not launched by default.
-6. Neither reference databases nor real sample FASTQs are included in this archive.
+4. Apple Silicon (M-series): some `linux/amd64` bioinformatics images have no native `arm64` counterpart. Rosetta or QEMU emulation may be necessary. Check each image in an nf-core/mag test profile before a production run.
+5. Edit `config/samples.tsv` to absolute FASTQ paths and `config/project.json` to the database folders. For this profile set `resource_mode` to `mac64`, with `threads=8`, `--max_cpus 8`, `--max_memory 40.GB`, and `profiles/mac64.config`. SemiBin2 is not launched by default.
+6. Reference databases and sample FASTQ files are not in the repository.
 
 ## C. Quick start
 
 ```bash
-cd MangroveMetaX_Ultra_v2.1_mac64
+cd Ultra_Metagenomics
 python3 metax.py plan
 python3 metax.py doctor
 python3 metax.py validate --full
