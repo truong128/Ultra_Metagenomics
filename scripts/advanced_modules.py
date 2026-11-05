@@ -35,6 +35,18 @@ def unpack(src,tmp):
         return dst
     return src
 
+def _dram2_env():
+    """Nextflow 26 needs Java 17 through 26. Prefer the Ubuntu OpenJDK 21 binary when it is installed."""
+    env=tool_env(NXF_SYNTAX_PARSER='v1')
+    for candidate in (os.environ.get('JAVA_CMD', ''),
+                      '/usr/lib/jvm/java-21-openjdk-amd64/bin/java',
+                      '/usr/lib/jvm/java-17-openjdk-amd64/bin/java'):
+        if candidate and Path(candidate).is_file():
+            env['JAVA_CMD']=candidate
+            break
+    return env
+
+
 def write_dram2_config(dest):
     """Nextflow config for the DRAM2 databases that are present. KEGG is omitted."""
     root = database_root()
@@ -180,7 +192,7 @@ def run_module(conf,name,dry=False):
                  '--anno_dbs',anno,
                  '--rename','--annotate','--qc','--summarize','--sum_ecos','aquatic,bgc',
                  '--visualize','--traits','-profile',conf['profile'],'-resume'],dry,
-                env=tool_env(NXF_SYNTAX_PARSER='v1'))
+                env=_dram2_env())
     elif name=='checkv':
         chk=must(db,'checkv',dry)
         explicit=conf.get('viral_fasta','')

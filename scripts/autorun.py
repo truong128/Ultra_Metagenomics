@@ -125,7 +125,9 @@ def path_status(conf,stage):
     if stage=='dbcan':return bool(list((conf['ext']/stage).glob('**/*overview*')))
     if stage=='amrfinder':return bool(list((conf['ext']/stage).glob('*.tsv')))
     if stage=='checkv':return bool(list((conf['ext']/stage).glob('**/quality_summary.tsv')))
-    if stage=='dram2':return (conf['ext']/stage/'DRAM2').is_dir()
+    if stage=='dram2':
+        folder=conf['ext']/stage/'DRAM2'
+        return folder.is_dir() and any(p.is_file() and 'pipeline_info' not in p.parts for p in folder.rglob('*'))
     if stage=='fegenie':return (conf['ext']/stage/'FeGenie').is_dir()
     if stage=='antismash':return bool(list((conf['ext']/stage).glob('**/index.html')))
     if stage=='metabolic_c':return (conf['ext']/stage/'METABOLIC_C').is_dir()
@@ -136,7 +138,7 @@ def path_status(conf,stage):
     if stage=='coverm':return (conf['ext']/stage/'mag_abundance.tsv').is_file()
     if stage=='drep':return (conf['ext']/stage/'data_tables').is_dir() or (conf['ext']/stage/'NOT_ENOUGH_MAGS.txt').is_file()
     if stage=='eukcc':return bool(list((conf['ext']/stage).glob('**/eukcc.csv'))) or (conf['ext']/stage/'no_eukaryotic_bins.txt').is_file()
-    if stage=='iphop':return (conf['ext']/stage).is_dir() and any((conf['ext']/stage).iterdir()) if (conf['ext']/stage).exists() else False
+    if stage=='iphop':return any((conf['ext']/stage).rglob('Host_prediction_to_genome*.csv')) if (conf['ext']/stage).exists() else False
     if stage=='crispr':return bool(list((conf['ext']/stage).glob('*.gff')))
     if stage=='whokaryote':return bool(list((conf['ext']/stage).glob('*/whokaryote_predictions_*.tsv')))
     if stage=='taxprofiler':return (conf['ext']/stage/'results').is_dir()

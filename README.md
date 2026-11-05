@@ -150,12 +150,12 @@ Everything in the research track, plus the stages below. Each one answers an ext
 | Stage | Extra question | Disk |
 | --- | --- | --- |
 | `markers_hmm` | A short HMM screen for carbon, nitrogen, and sulfur marker genes. Useful in water. Redundant once KOfam or eggNOG already covers those pathways. | Small HMM file. |
-| `dram2` | A second metabolic summary of the bins (KOfam, dbCAN, MEROPS, VOG, FeGenie HMMs, CAMPER, UniRef). KEGG is not included. | About 102 GB, of which UniRef90 is 96 GB. |
+| `dram2` | A second metabolic summary of the bins (KOfam, dbCAN, MEROPS, VOG, FeGenie HMMs, CAMPER, UniRef). KEGG is not included. The Nextflow run needs Java 17 through 26. On Ubuntu the stage uses OpenJDK 21 when that binary is installed. | About 102 GB, of which UniRef90 is 96 GB. |
 | `fegenie` | Iron genes. Reasonable for a deep, stratified lake if iron is a hypothesis. | Tool data only. |
 | `metabolic_c` | Community metabolism with METABOLIC-C. | Small, but it unpacks reads and uses a lot of scratch. |
 | `antismash` | Biosynthetic gene clusters on the bins. | antiSMASH databases, separate from the table above. |
 | `amrfinder` | Antimicrobial-resistance gene candidates. A specific question, not a default lake result. | About 0.2 GB. |
-| `humann` | Read-level pathway abundance. The default nucleotide reference is built from human microbiomes, so lake hits stay encoded potential with that bias. | About 50 GB. |
+| `humann` | Read-level pathway abundance. HUMAnN 3.9 runs with MetaPhlAn 4.1.1 and the June 2023 markers `mpa_vJun23_CHOCOPhlAnSGB_202403`. The January 2026 MetaPhlAn database stays with `taxprofiler` and is not a valid HUMAnN input. The nucleotide reference is built from human microbiomes, so lake hits stay encoded potential with that bias. | About 50 GB, plus about 25 GB for the June 2023 markers. |
 | `catalogue` | A non-redundant protein catalogue of the predicted genes. | Scratch for MMseqs. |
 | `nonpareil` | How redundant the read set is, and a rough sequencing-effort curve. | Tool only. |
 

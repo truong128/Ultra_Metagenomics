@@ -276,11 +276,35 @@ def run_iphop(conf, dry):
         viral = sorted(root.glob('VirusIdentification/geNomad/**/*virus*.fna*'))
     if not viral:
         raise FileNotFoundError('No geNomad viral FASTA. iPHoP was not run and no host was inferred.')
+    by_sample = {}
+    for path in viral:
+        parts = path.parts
+        sample = parts[parts.index('geNomad') + 1] if 'geNomad' in parts else path.stem
+        if 'virus.fna' not in path.name:
+            continue
+        current = by_sample.get(sample)
+        if current is None or (str(current).endswith('.gz') and not str(path).endswith('.gz')):
+            by_sample[sample] = path
+    if not by_sample:
+        raise FileNotFoundError('geNomad virus FASTA files were not fasta nucleotide files. iPHoP was not run.')
     dest = conf['ext'] / 'iphop'
     if not dry:
         dest.mkdir(parents=True, exist_ok=True)
-    _run(['iphop', 'predict', '--fa_file', viral[0], '--db_dir', db, '--out_dir', dest,
-          '-t', str(min(8, int(conf['threads'])))], dry)
+    threads = str(min(8, int(conf['threads'])))
+    for sample, path in sorted(by_sample.items()):
+        out = dest / sample
+        fasta = path
+        if str(path).endswith('.gz'):
+            fasta = out / path.name[:-3]
+            if not dry:
+                out.mkdir(parents=True, exist_ok=True)
+                if not fasta.is_file() or fasta.stat().st_size == 0:
+                    with gzip.open(path, 'rb') as src, open(fasta, 'wb') as handle:
+                        shutil.copyfileobj(src, handle)
+        from scripts.advanced_modules import tool_env
+        from scripts.host_paths import conda_root
+        _run(['iphop', 'predict', '--fa_file', fasta, '--db_dir', db, '--out_dir', out, '-t', threads], dry,
+             env=tool_env(conda_root() / 'envs' / 'metax-iphop' / 'bin'))
 
 
 def run_crispr(conf, dry):
@@ -348,8 +372,13 @@ def run_humann(conf, dry):
         if protein:
             cmd += ['--protein-database', protein]
         from scripts.host_paths import database_root
-        mpa = database_root() / 'metaphlan' / 'db'
-        cmd += ['--metaphlan-options', '--db_dir ' + str(mpa) + ' -x mpa_vJan26_CHOCOPhlAnSGB_202605']
+        # HUMAnN 3.9 accepts MetaPhlAn <= 4.1.1 and the June 2023 marker build.
+        # The January 2026 markers stay in databases/metaphlan/db for taxprofiler.
+        mpa = database_root() / 'humann' / 'metaphlan_vJun23'
+        index = 'mpa_vJun23_CHOCOPhlAnSGB_202403'
+        if not dry and not (mpa / (index + '.pkl')).is_file():
+            raise FileNotFoundError('HUMAnN requires the MetaPhlAn ' + index + ' database in ' + str(mpa))
+        cmd += ['--metaphlan-options', '--db_dir ' + str(mpa) + ' -x ' + index]
         _run(cmd, dry)
 
 
